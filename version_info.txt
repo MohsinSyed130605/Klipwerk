@@ -1,0 +1,36 @@
+# Windows EXE version resource file
+# Used by PyInstaller to embed proper version metadata into the .exe
+# so it shows correctly in File Properties and Task Manager.
+
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    prodvers=(1, 0, 0, 0),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo(
+      [
+        StringTable(
+          u'040904B0',
+          [
+            StringStruct(u'CompanyName',      u'Klipwerk'),
+            StringStruct(u'FileDescription',  u'Klipwerk - Fast & Modern Video Downloader'),
+            StringStruct(u'FileVersion',      u'1.0.0'),
+            StringStruct(u'InternalName',     u'Klipwerk'),
+            StringStruct(u'LegalCopyright',   u'BSD 3-Clause License'),
+            StringStruct(u'OriginalFilename', u'Klipwerk.exe'),
+            StringStruct(u'ProductName',      u'Klipwerk'),
+            StringStruct(u'ProductVersion',   u'1.0.0'),
+          ]
+        )
+      ]
+    ),
+    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+  ]
+)

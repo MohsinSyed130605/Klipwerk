@@ -1,0 +1,10 @@
+# Exclude build, packaging, binary, and cache directories from git archive/exports
+build/ export-ignore
+dist/ export-ignore
+installer/ export-ignore
+__pycache__/ export-ignore
+*.exe export-ignore
+*.AppImage export-ignore
+*.pyc export-ignore
+*.zip export-ignore
+.gitattributes export-ignore
