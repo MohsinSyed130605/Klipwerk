@@ -16,14 +16,14 @@
 
 ## 📥 Downloads & Releases
 
-Choose the appropriate package for your operating system from [Releases](https://github.com/MohsinSyed130605/Klipwerk/releases):
+Choose the appropriate package for your operating system:
 
-| Operating System | Architecture | Package Type | Filename | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| **Windows** | x64 (64-bit) | **Setup Installer** | `Klipwerk-Setup-x64.exe` | Recommended for Windows 10 & 11 (includes desktop & Start menu shortcuts) |
-| **Windows** | x64 (64-bit) | **Portable Standalone** | `Klipwerk-Portable-x64.exe` | Single-file executable, zero installation required |
-| **Linux** | x86_64 (64-bit) | **AppImage** | `Klipwerk-x64.AppImage` | Universal standalone package for 64-bit Intel/AMD Linux systems |
-| **Linux** | arm64 / aarch64 | **AppImage** | `Klipwerk-arm64.AppImage` | Standalone portable package for 64-bit ARM Linux devices & distributions |
+| Operating System | Architecture | Package Type | Filename | Description | Download |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| **Windows** | x64 (64-bit) | **Setup Installer** | `Klipwerk-Setup-x64.exe` | Recommended for Windows 10 & 11 (includes desktop & Start menu shortcuts) | [⬇ Download](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-Setup-x64.exe) |
+| **Windows** | x64 (64-bit) | **Portable Standalone** | `Klipwerk-Portable-x64.exe` | Single-file executable, zero installation required | [⬇ Download](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-Portable-x64.exe) |
+| **Linux** | x86_64 (64-bit) | **AppImage** | `Klipwerk-x64.AppImage` | Universal standalone package for 64-bit Intel/AMD Linux systems | [⬇ Download](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-x64.AppImage) |
+| **Linux** | arm64 / aarch64 | **AppImage** | `Klipwerk-arm64.AppImage` | Standalone portable package for 64-bit ARM Linux devices & distributions | [⬇ Download](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-arm64.AppImage) |
 
 > **Note:** On first launch, Klipwerk automatically detects your operating system and CPU architecture, downloading the required static FFmpeg binaries into its local directory if not already available on your system `PATH`.
 
@@ -50,12 +50,12 @@ Choose the appropriate package for your operating system from [Releases](https:/
 ## 🚀 Getting Started
 
 ### Windows
-1. Download **`Klipwerk-Setup-x64.exe`** from [Releases](https://github.com/MohsinSyed130605/Klipwerk/releases).
+1. Download **[Klipwerk-Setup-x64.exe](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-Setup-x64.exe)**.
 2. Run the installer and launch Klipwerk from your Start menu or Desktop.
-3. Alternatively, download **`Klipwerk-Portable-x64.exe`** and run it from anywhere with zero setup.
+3. Alternatively, download **[Klipwerk-Portable-x64.exe](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-Portable-x64.exe)** and run it from anywhere with zero setup.
 
 ### Linux
-1. Download **`Klipwerk-x64.AppImage`** (or **`Klipwerk-arm64.AppImage`**) from [Releases](https://github.com/MohsinSyed130605/Klipwerk/releases).
+1. Download **[Klipwerk-x64.AppImage](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-x64.AppImage)** (or **[Klipwerk-arm64.AppImage](https://github.com/MohsinSyed130605/Klipwerk/releases/latest/download/Klipwerk-arm64.AppImage)**).
 2. Make it executable:
    ```bash
    chmod +x Klipwerk-*.AppImage
