@@ -510,13 +510,14 @@ class KlipwerkApp(ctk.CTk):
                 "To get the latest engine updates, download the latest\n"
                 "Klipwerk release package from GitHub."
             )
-            btn_text = "Get Update"
+            btn_text = "Open Releases"
         else:
             desc_text = (
                 f"Installed: {cur_ver}\nLatest: {latest_ver}\n\n"
-                "Updating ensures the best compatibility with media sites."
+                "For controlled updates, use the official release channel\n"
+                "or run pip upgrade commands manually in your environment."
             )
-            btn_text = "Update Now"
+            btn_text = "Open Releases"
 
         ctk.CTkLabel(
             top,
@@ -531,14 +532,10 @@ class KlipwerkApp(ctk.CTk):
 
         def _do_up():
             top.destroy()
-            if _IS_FROZEN:
-                import webbrowser
-                webbrowser.open("https://github.com/MohsinSyed130605/Klipwerk/releases")
-            else:
-                Toast(self, "Updating yt-dlp", "Upgrading in the background...", "⏳")
-                update_ytdlp_async(
-                    lambda ok, val: self._update_q.put(("yt_update_done", ok, val))
-                )
+            Toast(self, "Opening Releases", "Redirecting to official release channel...", "🔗")
+            update_ytdlp_async(
+                lambda ok, val: self._update_q.put(("yt_update_done", ok, val))
+            )
 
         ctk.CTkButton(
             btn_box,
@@ -665,7 +662,7 @@ class KlipwerkApp(ctk.CTk):
                         _, ok, val = msg
                         if ok:
                             self._sidebar.hide_update_badge()
-                            Toast(self, "Update Complete", f"yt-dlp updated to v{val}", "✅")
+                            Toast(self, "Release Channel", str(val)[:60], "✅")
                         else:
                             Toast(self, "Update Failed", f"Could not update: {val[:40]}", "⚠")
 
@@ -713,5 +710,3 @@ class KlipwerkApp(ctk.CTk):
         self._clip_watcher.stop()
         self._downloader.shutdown()
         self.destroy()
-
-

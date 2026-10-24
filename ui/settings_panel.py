@@ -297,7 +297,7 @@ class SettingsPanel(ctk.CTkFrame):
             border_color=CLAY_INPUT_BORDER,
             text_color=TEXT_PRIMARY,
             placeholder_text_color=TEXT_MUTED,
-            placeholder_text="e.g. --proxy=http://127.0.0.1:8080 --no-check-certificate",
+            placeholder_text="e.g. --proxy=http://127.0.0.1:8080 --user-agent=...",
         )
         self._args_entry.insert(0, self._settings.get("custom_args", ""))
         self._args_entry.grid(row=r, column=0, sticky="ew", padx=24, pady=(0, 14))

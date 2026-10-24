@@ -109,6 +109,15 @@ Produces:
 
 ---
 
+## 🔐 Security & Release Integrity
+
+- Python dependencies are pinned in `requirements.txt` for reproducible installs.
+- FFmpeg bootstrap verifies SHA-256 checksums from upstream before extraction.
+- AppImage packaging pins `appimagetool` to a fixed release and verifies `SHA256SUMS`.
+- GitHub Actions CI runs dependency install and full Python bytecode compilation on pushes/PRs.
+
+---
+
 ## 📋 Supported Sites
 
 Any site supported by yt-dlp, including:

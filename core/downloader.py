@@ -279,8 +279,6 @@ def _build_opts(
             for token in shlex.split(custom_args):
                 if token.startswith("--proxy="):
                     opts["proxy"] = token.split("=", 1)[1]
-                elif token == "--no-check-certificate":
-                    opts["nocheckcertificate"] = True
                 elif token.startswith("--cookies="):
                     opts["cookiefile"] = token.split("=", 1)[1]
                 elif token.startswith("--user-agent="):
@@ -619,5 +617,4 @@ class Downloader:
             with self._lock:
                 self._cancelled.discard(card_id)
                 self._futures.pop(card_id, None)
-
 

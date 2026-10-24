@@ -13,6 +13,8 @@ cd "${ROOT_DIR}"
 
 APP_NAME="Klipwerk"
 APP_DIR="${ROOT_DIR}/build/AppDir"
+APPIMAGETOOL_VERSION="13"
+APPIMAGETOOL_RELEASE_BASE="https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}"
 
 # Determine architecture (allows override via TARGET_ARCH or argument)
 RAW_ARCH="${TARGET_ARCH:-${1:-$(uname -m)}}"
@@ -20,18 +22,21 @@ case "${RAW_ARCH}" in
     x86_64|amd64|x64)
         APPIMAGE_ARCH="x86_64"
         RELEASE_ARCH="x64"
-        APPIMAGETOOL_URL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage"
+        APPIMAGETOOL_FILE="appimagetool-x86_64.AppImage"
         ;;
     aarch64|arm64)
         APPIMAGE_ARCH="aarch64"
         RELEASE_ARCH="arm64"
-        APPIMAGETOOL_URL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-aarch64.AppImage"
+        APPIMAGETOOL_FILE="appimagetool-aarch64.AppImage"
         ;;
     *)
         echo "[ERROR] Unsupported architecture for AppImage: ${RAW_ARCH}"
         exit 1
         ;;
 esac
+
+APPIMAGETOOL_URL="${APPIMAGETOOL_RELEASE_BASE}/${APPIMAGETOOL_FILE}"
+APPIMAGETOOL_SUMS_URL="${APPIMAGETOOL_RELEASE_BASE}/SHA256SUMS"
 
 OUTPUT_APPIMAGE="${ROOT_DIR}/Klipwerk-${RELEASE_ARCH}.AppImage"
 
@@ -95,14 +100,54 @@ chmod +x "${APP_DIR}/AppRun"
 
 # 5. Fetch / Run appimagetool
 APPIMAGETOOL="${ROOT_DIR}/build/appimagetool-${APPIMAGE_ARCH}"
+verify_checksum() {
+    local file_path="$1"
+    local expected
+    local actual
+    local sums_data
+
+    if command -v curl &>/dev/null; then
+        sums_data="$(curl -fsSL "${APPIMAGETOOL_SUMS_URL}")" || return 1
+    elif command -v wget &>/dev/null; then
+        sums_data="$(wget -qO- "${APPIMAGETOOL_SUMS_URL}")" || return 1
+    else
+        echo "[ERROR] curl or wget is required for checksum verification."
+        return 1
+    fi
+
+    expected="$(printf '%s\n' "${sums_data}" | awk -v f="${APPIMAGETOOL_FILE}" '$2==f {print $1; exit}')"
+    if [ -z "${expected}" ]; then
+        echo "[ERROR] Could not find checksum entry for ${APPIMAGETOOL_FILE}."
+        return 1
+    fi
+
+    if command -v sha256sum &>/dev/null; then
+        actual="$(sha256sum "${file_path}" | awk '{print $1}')"
+    elif command -v shasum &>/dev/null; then
+        actual="$(shasum -a 256 "${file_path}" | awk '{print $1}')"
+    else
+        echo "[ERROR] sha256sum or shasum is required for checksum verification."
+        return 1
+    fi
+
+    if [ "${actual}" != "${expected}" ]; then
+        echo "[ERROR] appimagetool checksum mismatch."
+        echo "        expected: ${expected}"
+        echo "        actual:   ${actual}"
+        return 1
+    fi
+}
+
 if ! command -v appimagetool &>/dev/null; then
     if [ ! -f "${APPIMAGETOOL}" ]; then
-        echo "  Downloading appimagetool for ${APPIMAGE_ARCH}..."
+        echo "  Downloading appimagetool ${APPIMAGETOOL_VERSION} for ${APPIMAGE_ARCH}..."
         mkdir -p "${ROOT_DIR}/build"
         wget -q "${APPIMAGETOOL_URL}" -O "${APPIMAGETOOL}" || \
         curl -sL "${APPIMAGETOOL_URL}" -o "${APPIMAGETOOL}"
-        chmod +x "${APPIMAGETOOL}"
     fi
+    echo "  Verifying appimagetool checksum..."
+    verify_checksum "${APPIMAGETOOL}" || exit 1
+    chmod +x "${APPIMAGETOOL}"
     TOOL="${APPIMAGETOOL}"
 else
     TOOL="appimagetool"

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Changed
+- Pinned all runtime Python dependencies in `requirements.txt` for reproducible installs and builds.
+- Disabled insecure `--no-check-certificate` passthrough from custom yt-dlp arguments.
+- Updated yt-dlp in-app update action to open Klipwerk releases instead of mutating runtime packages via pip.
+
+### Added
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`) for dependency install and Python compile checks on pushes/PRs.
+- AppImage packaging hardening in `scripts/package_appimage.sh`:
+  - pinned `appimagetool` release version
+  - enforced SHA-256 verification via upstream `SHA256SUMS`
+
+---
+
 ## [1.0.0] - 2026-09-24
 
 ### Added
