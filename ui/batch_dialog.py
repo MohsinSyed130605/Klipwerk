@@ -1,8 +1,4 @@
-"""
-ui/batch_dialog.py
-Tactile Claymorphic modal for batch importing multiple video/audio URLs,
-inspired by Vividl's FetchWindow, with format presets and auto-start options.
-"""
+"""Batch URL import and download queue dialog."""
 
 from __future__ import annotations
 

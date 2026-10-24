@@ -1,17 +1,4 @@
-"""
-main.py
-Klipwerk entry point.
-
-Can be launched:
-  python main.py     — console attached (install_and_run.bat, debugging)
-  pythonw main.py    — no console (run.bat, background)
-  ./run.sh           — Unix / Linux launcher
-
-Handles:
-  1. Pip dependency bootstrap
-  2. Multi-platform ffmpeg auto-download (Windows and Linux x86_64/arm64)
-  3. App launch
-"""
+"""Application launcher and runtime dependency bootstrapper."""
 
 from __future__ import annotations
 
@@ -29,9 +16,13 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-# ---------------------------------------------------------------------------
-# Paths & constants
-# ---------------------------------------------------------------------------
+if sys.platform == "win32":
+    try:
+        import ctypes
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("MohsinSyed.Klipwerk.1.0")
+    except Exception:
+        pass
+
 APP_DIR = Path(__file__).parent.resolve()
 BIN_DIR = APP_DIR / "bin"
 
@@ -45,20 +36,15 @@ FFPROBE_NAME = "ffprobe.exe" if _IS_WIN else "ffprobe"
 FFMPEG_EXE  = BIN_DIR / FFMPEG_NAME
 FFPROBE_EXE = BIN_DIR / FFPROBE_NAME
 _WANTED     = {FFMPEG_NAME, FFPROBE_NAME}
-
-# True when launched via python.exe (console exists), False for pythonw.exe
 _HAS_CONSOLE: bool = sys.stdout is not None
 
 
 def _log(msg: str) -> None:
-    """Print only when a console is attached."""
     if _HAS_CONSOLE:
         print(msg, flush=True)
 
 
-# ---------------------------------------------------------------------------
-# 1 ── Pip dependency bootstrap
-# ---------------------------------------------------------------------------
+# Dependency management
 _REQUIRED = [
     ("customtkinter", "customtkinter>=5.2.0", "CustomTkinter"),
     ("yt_dlp",        "yt-dlp",               "yt-dlp"),
@@ -411,10 +397,6 @@ def bootstrap_ffmpeg(settings: dict) -> None:
         _log("  You can install ffmpeg using your package manager (e.g. apt/brew)")
         _log("  or set the path manually in Settings → Advanced.\n")
 
-
-# ---------------------------------------------------------------------------
-# 3 ── Entry point
-# ---------------------------------------------------------------------------
 
 def main() -> None:
     bootstrap_pip()

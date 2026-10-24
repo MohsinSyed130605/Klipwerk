@@ -1,7 +1,4 @@
-"""
-ui/queue_panel.py
-Queue panel hosting Vividl-style DownloadCard items in a scrollable list.
-"""
+"""Download queue list container."""
 
 from __future__ import annotations
 

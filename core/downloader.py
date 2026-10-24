@@ -1,8 +1,4 @@
-"""
-core/downloader.py
-Thin wrapper around yt-dlp's Python API.
-Runs downloads in a ThreadPoolExecutor and forwards progress via callbacks.
-"""
+"""Media extraction and download manager using yt-dlp."""
 
 import io
 import threading
@@ -31,10 +27,6 @@ try:
     HAS_MUTAGEN = True
 except ImportError:
     HAS_MUTAGEN = False
-
-# ---------------------------------------------------------------------------
-# Public constants referenced by UI components
-# ---------------------------------------------------------------------------
 
 QUALITY_OPTIONS: list[str] = [
     "Best (auto)",

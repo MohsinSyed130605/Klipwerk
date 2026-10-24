@@ -1,8 +1,4 @@
-"""
-ui/format_dialog.py
-Modal dialog to choose video/audio quality and container format
-with tactile Claymorphic styling.
-"""
+"""Format and quality selection dialog."""
 
 from __future__ import annotations
 

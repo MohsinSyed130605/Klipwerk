@@ -1,8 +1,4 @@
-"""
-ui/settings_panel.py
-Full-featured settings form with tactile Claymorphic styling,
-clay input cards, sliders, switches, and pill action buttons.
-"""
+"""Application settings configuration panel."""
 
 from __future__ import annotations
 

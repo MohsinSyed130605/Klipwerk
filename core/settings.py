@@ -1,9 +1,4 @@
-"""
-core/settings.py
-Persistent user settings stored in OS-appropriate config directory:
-  Windows: %APPDATA%/Klipwerk/settings.json
-  Linux:   $XDG_CONFIG_HOME/Klipwerk/settings.json (~/.config/Klipwerk/settings.json)
-"""
+"""Persistent user configuration management."""
 
 import json
 import os

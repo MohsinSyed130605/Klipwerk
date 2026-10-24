@@ -1,17 +1,9 @@
-"""
-ui/toast.py
-Toast popup notifications disabled per user request.
-Retained as a clean no-op for backward compatibility.
-"""
+"""Notification toast component interface."""
 
 from __future__ import annotations
 
 
 class Toast:
-    """
-    Toast popup notifications disabled per user request.
-    No floating top-level popup windows are generated.
-    """
 
     def __init__(
         self,

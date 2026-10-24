@@ -1,8 +1,4 @@
-"""
-core/updater.py
-Background yt-dlp version checker and one-click updater.
-Works both in normal Python mode and as a PyInstaller-bundled .exe.
-"""
+"""Version checker and updater for yt-dlp."""
 from __future__ import annotations
 
 import json
@@ -14,13 +10,10 @@ import urllib.request
 from typing import Callable
 
 PYPI_URL = "https://pypi.org/pypi/yt-dlp/json"
-
-# True when running from a PyInstaller bundle (frozen exe)
 _IS_FROZEN = getattr(sys, "frozen", False)
 
 
 def parse_version(v_str: str) -> tuple[int, ...]:
-    """Parse version string like '2026.08.19' or '2026.8.19' into comparable integer tuple."""
     parts = []
     for chunk in v_str.split("."):
         digits = "".join(c for c in chunk if c.isdigit())
@@ -45,13 +38,7 @@ def _fetch_latest() -> str:
 
 
 def _find_pip_python() -> list[str] | None:
-    """
-    Locate a Python interpreter that can run pip.
-    When frozen as an .exe, sys.executable is the exe itself — not Python.
-    We look for python/python3 on the system PATH instead.
-    """
     if not _IS_FROZEN:
-        # Normal dev mode: use the same interpreter
         return [sys.executable, "-m", "pip"]
 
     # Frozen: find system Python

@@ -1,11 +1,4 @@
-"""
-ui/icons.py
-Centralized Phosphor Icon loader, runtime SVG rasterizer, and in-memory cache.
-- Uses high-performance Rust-based `resvg-py` for pixel-perfect runtime rasterization.
-- Automatically handles high-DPI scaling (2x rasterization).
-- Renders Bold weight for UI controls (<24px) and Duotone for large placeholders.
-- Dynamically tints icons using the app's amber accent (#E8A33D) or neutral UI tones.
-"""
+"""SVG icon rasterizer and cache."""
 
 from __future__ import annotations
 

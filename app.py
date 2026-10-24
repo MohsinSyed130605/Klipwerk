@@ -1,9 +1,4 @@
-"""
-app.py
-Root CustomTkinter application class.
-Coordinates layout, thread-safe event queue, background tasks,
-auto-updates, clipboard monitoring, and toast notifications.
-"""
+"""Main application window and coordinator."""
 
 from __future__ import annotations
 
@@ -35,7 +30,6 @@ from ui.theme import (
 )
 from ui.icons import get_icon
 
-
 import ctypes
 from PIL import Image
 
@@ -46,7 +40,6 @@ class KlipwerkApp(ctk.CTk):
     def __init__(self, settings: dict | None = None):
         super().__init__()
 
-        # Use pre-loaded settings (from main.py bootstrap) or load fresh
         self.settings = settings if settings is not None else settings_module.load()
         self._apply_theme()
 
@@ -54,49 +47,31 @@ class KlipwerkApp(ctk.CTk):
         self.geometry("1180x740")
         self.minsize(self.MIN_W, self.MIN_H)
 
-        # ── Window icon ──────────────────────────────────────────────────
-        # On Linux: iconphoto() with the PNG is sufficient.
-        # On Windows: CTk's default icon overrides iconphoto(). The only
-        # reliable fix is to send WM_SETICON directly to the native HWND
-        # via ctypes after the window is fully realized.
         base_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
         self._icon_photo = None
         self._icon_png_path = base_dir / "assets" / "icon.png"
         self._icon_ico_path = base_dir / "assets" / "icon.ico"
-        self._set_window_icon()  # initial set
-        # Re-apply after first idle cycle (CTk may reset it during layout)
+        self._set_window_icon()
         self.after(100, self._set_window_icon)
 
-        # Apply native Windows 10/11 dark title bar and caption color
         self._enable_dwm_dark_mode()
 
-        # Thread-safe message bus: background threads → main thread
         self._update_q: queue.Queue = queue.Queue()
-
-        # Download executor
         self._downloader = Downloader(max_workers=self.settings.get("max_concurrent", 3))
 
-        # Build application layout
         self._build_layout()
-
-        # Global paste shortcut: Ctrl+V adds URL from clipboard
         self.bind("<Control-v>", self._on_global_paste)
 
-        # Clipboard watcher
         self._clip_watcher = ClipboardWatcher(self._on_clipboard_url)
         if self.settings.get("clipboard_watcher", True):
             self._clip_watcher.start()
 
-        # Start UI update polling loop
         self.after(120, self._drain_queue)
-
-        # Background yt-dlp update check on startup
         self.after(2000, self._check_ytdlp_update)
-
         self.protocol("WM_DELETE_WINDOW", self._on_close)
 
     def _set_window_icon(self) -> None:
-        """Set the window/taskbar icon reliably on both platforms."""
+        """Set window and taskbar icon."""
         try:
             if sys.platform == "win32" and self._icon_ico_path.exists():
                 ico_path = str(self._icon_ico_path)
@@ -109,14 +84,19 @@ class KlipwerkApp(ctk.CTk):
                     hwnd = int(self.wm_frame(), 16)
                 except Exception:
                     hwnd = ctypes.windll.user32.GetParent(self.winfo_id()) or self.winfo_id()
-                # LR_LOADFROMFILE = 0x10
-                hicon_big = ctypes.windll.user32.LoadImageW(None, ico_path, 1, 256, 256, 0x10)
-                hicon_small = ctypes.windll.user32.LoadImageW(None, ico_path, 1, 16, 16, 0x10)
-                if hicon_big:
-                    ctypes.windll.user32.SendMessageW(hwnd, 0x80, 1, hicon_big)
-                if hicon_small:
-                    ctypes.windll.user32.SendMessageW(hwnd, 0x80, 0, hicon_small)
-            if self._icon_png_path.exists():
+                cx_big = ctypes.windll.user32.GetSystemMetrics(11)
+                cy_big = ctypes.windll.user32.GetSystemMetrics(12)
+                cx_small = ctypes.windll.user32.GetSystemMetrics(49)
+                cy_small = ctypes.windll.user32.GetSystemMetrics(50)
+                hicon_big = ctypes.windll.user32.LoadImageW(None, ico_path, 1, cx_big, cy_big, 0x10)
+                hicon_small = ctypes.windll.user32.LoadImageW(None, ico_path, 1, cx_small, cy_small, 0x10)
+                for h in {hwnd, self.winfo_id(), ctypes.windll.user32.GetParent(self.winfo_id())}:
+                    if h:
+                        if hicon_big:
+                            ctypes.windll.user32.SendMessageW(h, 0x80, 1, hicon_big)
+                        if hicon_small:
+                            ctypes.windll.user32.SendMessageW(h, 0x80, 0, hicon_small)
+            elif self._icon_png_path.exists():
                 from PIL import ImageTk
                 img = Image.open(self._icon_png_path).resize((64, 64), Image.LANCZOS)
                 self._icon_photo = ImageTk.PhotoImage(img)

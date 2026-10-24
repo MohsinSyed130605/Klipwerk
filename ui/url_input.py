@@ -1,8 +1,4 @@
-"""
-ui/url_input.py
-Header & Toolbar components with separate action buttons ("tabs") for:
-Add, Paste, Batch, Import from file, Start all, Pause, Clear done, and Quality dropdown.
-"""
+"""URL input toolbar and action controls."""
 
 from __future__ import annotations
 

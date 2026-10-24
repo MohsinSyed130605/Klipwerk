@@ -1,23 +1,4 @@
-"""
-ui/theme.py
-Design system tokens, metrics, and theme values for Klipwerk.
-Strictly adheres to:
-- Surfaces: #0E1013 page background, #15181C for bars and panels, #1B1F24 for hover states
-- Borders: 1px solid rgba(255,255,255,0.08) (solid #272A2E)
-- Text: #E6E8EB primary, #9BA1A8 secondary, #6B7178 muted
-- Accent: #4f46e5 reserved strictly for:
-    1) The single primary button
-    2) Progress bar fill
-    3) Focus rings
-    4) Selected sidebar indicator
-  Accent stripped from everywhere else.
-- Radius: 6px on controls (buttons, inputs), 10px on the window shell. Nothing else gets rounded.
-- Font sizes: 12px for UI text, 11px for metadata, 10px for table headers.
-- Font weights: only 400 and 500 exist. Removed every 600 and 700.
-- All spacing values snap to a 4px grid.
-- Control height is 28px everywhere (buttons, inputs, dropdowns).
-- Hard rules: No gradients, no glows, no blur, no drop shadows. Nothing has both border-radius and box-shadow. No pill shapes.
-"""
+"""UI design tokens, styling constants, and font loaders."""
 
 from __future__ import annotations
 

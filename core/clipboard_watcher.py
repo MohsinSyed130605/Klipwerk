@@ -1,8 +1,4 @@
-"""
-core/clipboard_watcher.py
-Background daemon thread that monitors the clipboard for video URLs
-and fires a callback when a new one is detected.
-"""
+"""Background clipboard monitor for media URLs."""
 
 import re
 import threading

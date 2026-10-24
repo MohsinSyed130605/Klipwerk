@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""
-scripts/export_source.py
-Creates a clean, production-ready source archive (.zip) of the Klipwerk repository.
-Guarantees that:
-  - build/, dist/, installer/, and all __pycache__/ directories are excluded.
-  - Python bytecode (*.pyc, *.pyo) and temporary files (*.tmp, *.log) are excluded.
-  - Compiled binaries (*.exe, *.AppImage, auto-downloaded bin/) are excluded.
-  - Only tracked source code, assets, scripts, configuration, and documentation are included.
-"""
+"""Clean source code archive packager."""
 
 from __future__ import annotations
 

@@ -1,11 +1,4 @@
-"""
-ui/sidebar.py
-Clean 132px fixed navigation sidebar matching reference design:
-- Fixed 132px width (no collapsible toggle)
-- Exactly two nav items plus Settings: "Queue" and "Failed"
-- Amber tint for Queue when selected, Red tint for Failed when count > 0
-- Settings pinned below hairline divider at bottom
-"""
+"""Navigation sidebar component."""
 
 from __future__ import annotations
 import customtkinter as ctk

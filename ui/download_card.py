@@ -1,13 +1,4 @@
-"""
-ui/download_card.py
-Vividl-style queue card component matching reference design:
-- 90x50px 16:9 thumbnail with fast sub-second metadata fetching (oEmbed + direct thumbnail).
-- Row 1: Bold video title + rename pencil icon (✏).
-- Row 2: Format dropdown menu (🎥 Convert to MP4 ▾, Convert to WebM, Convert to MP3, etc.),
-         custom tools button (🔧), video metadata info button (ℹ), and duration (00:10:37).
-- Right-side actions: Direct download button (⭳) and delete button (🗑), plus live download
-  metrics (speed, size, ETA, progress bar) when active.
-"""
+"""Queue card component for video downloads and format controls."""
 
 from __future__ import annotations
 
