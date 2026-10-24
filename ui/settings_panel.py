@@ -91,6 +91,7 @@ class SettingsPanel(ctk.CTkFrame):
         )
         self._dir_entry.insert(0, self._settings.get("output_dir", str(Path.home() / "Downloads")))
         self._dir_entry.grid(row=0, column=0, sticky="ew", padx=(0, 10))
+        self._dir_entry.bind("<FocusOut>", lambda _e: self._auto_save())
 
         ctk.CTkButton(
             dir_row,
@@ -122,6 +123,11 @@ class SettingsPanel(ctk.CTkFrame):
             text_color=TEXT_PRIMARY,
             width=28,
         )
+
+        def _on_conc_change(v):
+            self._conc_lbl.configure(text=str(int(v)))
+            self._auto_save()
+
         ctk.CTkSlider(
             conc,
             from_=1,
@@ -132,7 +138,7 @@ class SettingsPanel(ctk.CTkFrame):
             progress_color=CLAY_PRIMARY["fg_color"],
             button_color=CLAY_PRIMARY["border_color"],
             button_hover_color=CLAY_PRIMARY["hover_color"],
-            command=lambda v: self._conc_lbl.configure(text=str(int(v))),
+            command=_on_conc_change,
         ).pack(side="left")
         self._conc_lbl.pack(side="left", padx=10)
         ctk.CTkLabel(
@@ -150,6 +156,7 @@ class SettingsPanel(ctk.CTkFrame):
             corner_radius=RADIUS_BUTTON,
             button_color=CLAY_PRIMARY["fg_color"],
             button_hover_color=CLAY_PRIMARY["hover_color"],
+            command=lambda _val: self._auto_save(),
         ).grid(row=r, column=0, sticky="w", padx=24, pady=(0, 14))
         r += 1
 
@@ -164,6 +171,7 @@ class SettingsPanel(ctk.CTkFrame):
             corner_radius=RADIUS_BUTTON,
             button_color=CLAY_PRIMARY["fg_color"],
             button_hover_color=CLAY_PRIMARY["hover_color"],
+            command=lambda _val: self._auto_save(),
         ).grid(row=r, column=0, sticky="w", padx=24, pady=(0, 14))
         r += 1
 
@@ -178,6 +186,7 @@ class SettingsPanel(ctk.CTkFrame):
             progress_color=CLAY_PRIMARY["fg_color"],
             onvalue=True,
             offvalue=False,
+            command=self._auto_save,
         ).grid(row=r, column=0, sticky="w", padx=24, pady=(0, 10))
         r += 1
 
@@ -192,6 +201,7 @@ class SettingsPanel(ctk.CTkFrame):
             progress_color=CLAY_PRIMARY["fg_color"],
             onvalue=True,
             offvalue=False,
+            command=self._auto_save,
         ).grid(row=r, column=0, sticky="w", padx=24, pady=(0, 16))
         r += 1
 
@@ -215,6 +225,7 @@ class SettingsPanel(ctk.CTkFrame):
             sz = self._rev_font_map.get(val, 12)
             self._settings["font_size"] = sz
             set_base_font_size(sz)
+            self._auto_save()
 
         ctk.CTkSegmentedButton(
             self._scroll,
@@ -241,6 +252,7 @@ class SettingsPanel(ctk.CTkFrame):
             progress_color=CLAY_PRIMARY["fg_color"],
             onvalue=True,
             offvalue=False,
+            command=self._auto_save,
         ).grid(row=r, column=0, sticky="w", padx=24, pady=(0, 16))
         r += 1
 
@@ -269,6 +281,7 @@ class SettingsPanel(ctk.CTkFrame):
             corner_radius=RADIUS_BUTTON,
             button_color=CLAY_PRIMARY["fg_color"],
             button_hover_color=CLAY_PRIMARY["hover_color"],
+            command=lambda _val: self._auto_save(),
         ).grid(row=r, column=0, sticky="w", padx=24, pady=(0, 14))
         r += 1
 
@@ -288,6 +301,7 @@ class SettingsPanel(ctk.CTkFrame):
         )
         self._args_entry.insert(0, self._settings.get("custom_args", ""))
         self._args_entry.grid(row=r, column=0, sticky="ew", padx=24, pady=(0, 14))
+        self._args_entry.bind("<FocusOut>", lambda _e: self._auto_save())
         r += 1
 
         r = self._label("ffmpeg executable path  (leave blank to auto-detect on PATH)", r)
@@ -305,6 +319,7 @@ class SettingsPanel(ctk.CTkFrame):
         )
         self._ffmpeg_entry.insert(0, self._settings.get("ffmpeg_path", ""))
         self._ffmpeg_entry.grid(row=r, column=0, sticky="ew", padx=24, pady=(0, 6))
+        self._ffmpeg_entry.bind("<FocusOut>", lambda _e: self._auto_save())
         r += 1
 
         ctk.CTkLabel(
@@ -384,11 +399,12 @@ class SettingsPanel(ctk.CTkFrame):
         if path:
             self._dir_entry.delete(0, "end")
             self._dir_entry.insert(0, path)
+            self._auto_save()
 
-    def _save(self) -> None:
+    def get_current_dict(self) -> dict:
         hw_choice = self._hw_var.get()
         hw_accel = self._hw_rev_map.get(hw_choice, "auto")
-        new = {
+        return {
             "output_dir":        self._dir_entry.get().strip() or str(Path.home() / "Downloads"),
             "max_concurrent":    int(self._conc_var.get()),
             "default_quality":   self._quality_var.get(),
@@ -402,6 +418,13 @@ class SettingsPanel(ctk.CTkFrame):
             "hw_accel":          hw_accel,
             "custom_args":       self._args_entry.get().strip(),
         }
+
+    def _auto_save(self) -> None:
+        new = self.get_current_dict()
+        self._settings.update(new)
         self._on_save(new)
+
+    def _save(self) -> None:
+        self._auto_save()
         self._saved_lbl.configure(text="✓  Preferences Saved!")
         self.after(3000, lambda: self._saved_lbl.configure(text=""))

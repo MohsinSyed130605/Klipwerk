@@ -42,6 +42,7 @@ FORMAT_PRESETS = [
     "Convert to MP3",
     "Convert to M4A",
     "Convert to WAV",
+    "Convert to FLAC",
     "Convert to Ogg Vorbis",
     "Best Direct Download",
     "Best Audio-only Download",
@@ -64,6 +65,8 @@ def _map_preset_to_format(preset: str) -> tuple[str, str]:
         return ("M4A Audio", "M4A")
     if "Convert to WAV" in preset:
         return ("WAV Audio", "WAV")
+    if "Convert to FLAC" in preset:
+        return ("FLAC Audio", "FLAC")
     if "Convert to Ogg Vorbis" in preset:
         return ("Opus Audio", "Ogg")
     if "Best Direct Download" in preset:

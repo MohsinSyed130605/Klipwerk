@@ -267,6 +267,11 @@ class KlipwerkApp(ctk.CTk):
     # ------------------------------------------------------------------
 
     def _switch_view(self, view: str) -> None:
+        if self._current_view == "settings" and hasattr(self, "_settings_panel"):
+            try:
+                self._on_settings_save(self._settings_panel.get_current_dict())
+            except Exception:
+                pass
         if view in ("queue", "failed", "all", "downloads"):
             filter_key = "failed" if view == "failed" else "queue"
             if self._current_view != "downloads":
@@ -305,8 +310,24 @@ class KlipwerkApp(ctk.CTk):
         parts = [p.strip() for p in val.split("·")]
         if len(parts) == 2:
             q_part, f_part = parts[0], parts[1]
-            self._default_quality = q_part.replace("p", "") if "p" in q_part else q_part.lower()
-            self._default_format = f_part.lower()
+            if q_part.lower() == "best":
+                q_str = "Best (auto)"
+            elif q_part.lower() == "audio":
+                q_str = f"{f_part.upper()} Audio"
+            elif q_part == "1080p":
+                q_str = "1080p Full HD"
+            elif q_part == "720p":
+                q_str = "720p HD"
+            elif q_part == "480p":
+                q_str = "480p SD"
+            else:
+                q_str = q_part
+            f_str = f_part.upper()
+            self._default_quality = q_str
+            self._default_format = f_str
+            self.settings["default_quality"] = q_str
+            self.settings["default_format"] = f_str
+            settings_module.save(self.settings)
 
     # ------------------------------------------------------------------
     # Theme
@@ -551,6 +572,9 @@ class KlipwerkApp(ctk.CTk):
         self.settings.update(new_settings)
         settings_module.save(self.settings)
 
+        self._default_quality = new_settings.get("default_quality", "Best (auto)")
+        self._default_format = new_settings.get("default_format", "MP4")
+
         # Apply theme immediately
         ctk.set_appearance_mode("dark")
         self._sidebar.update_theme_icon("dark")
@@ -571,8 +595,6 @@ class KlipwerkApp(ctk.CTk):
                 self._clip_watcher.start()
             else:
                 self._clip_watcher.stop()
-
-        Toast(self, "Settings Saved", "Your preferences have been updated", "⚙")
 
     # ------------------------------------------------------------------
     # Main-thread message drain loop
@@ -680,6 +702,14 @@ class KlipwerkApp(ctk.CTk):
     # ------------------------------------------------------------------
 
     def _on_close(self) -> None:
+        try:
+            if hasattr(self, "_settings_panel"):
+                new_s = self._settings_panel.get_current_dict()
+                self._on_settings_save(new_s)
+            else:
+                settings_module.save(self.settings)
+        except Exception:
+            pass
         self._clip_watcher.stop()
         self._downloader.shutdown()
         self.destroy()
